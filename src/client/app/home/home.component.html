@@ -1,0 +1,66 @@
+<div class="container">
+  <h1>{{title}}</h1>
+
+  <div class="create-company">
+    <fieldset>
+      <legend><h3>Create Company</h3></legend>
+      <button *ngIf="!viewCreateForm" kendoButton (click)="viewCreateForm = true" [primary]="true">Create Company</button>
+      <div class="company-form" *ngIf="viewCreateForm">
+        <input type="text" name="name" class="k-textbox" [(ngModel)]="companyName">
+        <button kendoButton (click)="create()" [primary]="true">Create</button>
+        <button kendoButton (click)="viewCreateForm = false">Cancel</button>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="update-company">
+    <fieldset>
+      <legend><h3>Update Company</h3></legend>
+
+      <span>Company List:</span>
+      <kendo-dropdownlist
+            [data]="companies"
+            [textField]="'name'"
+            [valueField]="'id'"
+            [(ngModel)]="selectedCompany"
+            (ngModelChange)="viewUpdateForm = true">
+      </kendo-dropdownlist>
+
+      <div class="company-form" *ngIf="viewUpdateForm">
+        <div class="company-info">
+          <span>Company info:</span>
+          <span><b>ID:</b> {{selectedCompany.id}}</span>,
+          <span><b>Name:</b> {{selectedCompany.name}}</span>
+        </div>
+        <div class="company-update-form">
+          <input type="text" name="name" class="k-textbox" [(ngModel)]="newName">
+          <button kendoButton (click)="update(selectedCompany, newName)" [primary]="true">Update</button>
+          <button kendoButton (click)="remove(selectedCompany)" [primary]="true">Remove</button>
+          <button kendoButton (click)="viewUpdateForm = false">Cancel</button>
+        </div>
+      </div>
+
+
+      <div class="upload-form" *ngIf="viewUpdateForm">
+          <kendo-upload
+            [autoUpload]="false"
+            [saveUrl]="uploadSaveUrl"
+            [removeUrl]="uploadRemoveUrl"
+            (select)="selectEventHandler($event)"
+            (clear)="clearEventHandler($event)"
+            (remove)="removeEventHandler($event)"
+            (upload)="uploadEventHandler(selectedCompany, $event)"
+            (complete)="completeEventHandler($event)">
+          </kendo-upload>
+
+          <div *ngIf="imagePreviews.length" class="img-preview example-config">
+            <h3>Preview selected images</h3>
+            <img *ngFor="let image of imagePreviews"
+              [src]="image.src"
+              alt="image preview"
+              style="width: 200px; margin: 10px;" />
+          </div>
+      </div>
+    </fieldset>
+  </div>
+</div>
