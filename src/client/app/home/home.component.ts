@@ -19,7 +19,9 @@ export class HomeComponent implements OnInit {
   private uploadRemoveUrl: string = "removeUrl";
   private uploadSaveUrl: string = "http://localhost:3000/api/company/upload";
   private viewCreateForm: Boolean;
+  private viewUpdateForm: Boolean;
   private selectedCompany: Object;
+  private newName: string;
 
   constructor(
     private httpService:HttpService
@@ -27,7 +29,9 @@ export class HomeComponent implements OnInit {
     this.title = 'File Upload to S3';
     this.companies = [];
     this.viewCreateForm = false;
+    this.viewUpdateForm = false;
     this.selectedCompany = {};
+    this.newName = '';
   }
 
   ngOnInit() {
@@ -54,18 +58,20 @@ export class HomeComponent implements OnInit {
       )
   }
 
-  update(company, newName) {
-    if(!newName)
+  update(company) {
+    if(!this.newName)
       return;
 
-    this.httpService.updateCompany({id: company.id, newName: newName}).subscribe (
+    this.httpService.updateCompany({id: company.id, newName: this.newName}).subscribe (
           res => {
              let index = _.findIndex(this.companies, {id: res.id});
              this.companies.splice(index, 1, res);
              this.selectedCompany = {
                id: company.id,
-               name: newName
+               name: this.newName
              };
+
+             this.newName = '';
           },
           err => console.log(err, 'updating company error')
       )
@@ -133,5 +139,16 @@ export class HomeComponent implements OnInit {
       company_id: company.id,
       file: e.files[0]
     };
+  }
+
+  updateCompanyData(): void {
+    let that = this;
+    this.viewUpdateForm = false;
+    setTimeout(function(){
+      that.viewUpdateForm = true;
+    }, 100);
+
+    this.imagePreviews = [];
+    this.newName = '';
   }
 }

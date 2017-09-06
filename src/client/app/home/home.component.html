@@ -23,7 +23,7 @@
             [textField]="'name'"
             [valueField]="'id'"
             [(ngModel)]="selectedCompany"
-            (ngModelChange)="viewUpdateForm = true">
+            (ngModelChange)="updateCompanyData()">
       </kendo-dropdownlist>
 
       <div class="company-form" *ngIf="viewUpdateForm">
@@ -34,7 +34,7 @@
         </div>
         <div class="company-update-form">
           <input type="text" name="name" class="k-textbox" [(ngModel)]="newName">
-          <button kendoButton (click)="update(selectedCompany, newName)" [primary]="true">Update</button>
+          <button kendoButton (click)="update(selectedCompany)" [primary]="true">Update</button>
           <button kendoButton (click)="remove(selectedCompany)" [primary]="true">Remove</button>
           <button kendoButton (click)="viewUpdateForm = false">Cancel</button>
         </div>
